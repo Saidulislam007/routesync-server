@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import { connectDatabase } from "./config/database.js";
 
 import { env } from "./config/env.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
@@ -36,7 +37,14 @@ app.get("/", (_req, res) => {
   });
 });
 
-app.use("/api/v1", apiRouter);
+app.use("/api/v1", async (_req, _res, next) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.use(notFoundHandler);
 app.use(errorHandler);
