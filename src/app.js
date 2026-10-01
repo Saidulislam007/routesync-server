@@ -46,6 +46,19 @@ app.use("/api/v1", async (_req, _res, next) => {
   }
 });
 
+app.use("/api/v1", apiRouter);
+
+app.use("/api/v1", async (_req, _res, next) => {
+  try {
+    await connectDatabase();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.use("/api/v1", apiRouter);
+
 app.use(notFoundHandler);
 app.use(errorHandler);
 
